@@ -1,8 +1,8 @@
 namespace Catalog.Host.Data.Entities;
 
-public class CatalogBrand
+public class CatalogWeapon
 {
     public int Id { get; set; }
 
-    public string Brand { get; set; } = null!;
+    public string Weapon { get; set; } = null!;
 }

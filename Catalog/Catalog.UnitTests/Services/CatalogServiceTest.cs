@@ -35,11 +35,11 @@ public class CatalogServiceTest
         var testPageSize = 4;
         var testTotalCount = 12;
 
-        var pagingPaginatedItemsSuccess = new PaginatedItems<CatalogItem>()
+        var pagingPaginatedItemsSuccess = new PaginatedItems<CatalogCharacterItem>()
         {
-            Data = new List<CatalogItem>()
+            Data = new List<CatalogCharacterItem>()
             {
-                new CatalogItem()
+                new CatalogCharacterItem()
                 {
                     Name = "TestName",
                 },
@@ -47,7 +47,7 @@ public class CatalogServiceTest
             TotalCount = testTotalCount,
         };
 
-        var catalogItemSuccess = new CatalogItem()
+        var catalogItemSuccess = new CatalogCharacterItem()
         {
             Name = "TestName"
         };
@@ -64,7 +64,7 @@ public class CatalogServiceTest
             It.IsAny<int?>())).ReturnsAsync(pagingPaginatedItemsSuccess);
 
         _mapper.Setup(s => s.Map<CatalogItemDto>(
-            It.Is<CatalogItem>(i => i.Equals(catalogItemSuccess)))).Returns(catalogItemDtoSuccess);
+            It.Is<CatalogCharacterItem>(i => i.Equals(catalogItemSuccess)))).Returns(catalogItemDtoSuccess);
 
         // act
         var result = await _catalogService.GetCatalogItemsAsync(testPageSize, testPageIndex, null);
@@ -83,7 +83,7 @@ public class CatalogServiceTest
         // arrange
         var testPageIndex = 1000;
         var testPageSize = 10000;
-        PaginatedItems<CatalogItem> item = null!;
+        PaginatedItems<CatalogCharacterItem> item = null!;
 
         _catalogItemRepository.Setup(s => s.GetByPageAsync(
             It.Is<int>(i => i == testPageIndex),

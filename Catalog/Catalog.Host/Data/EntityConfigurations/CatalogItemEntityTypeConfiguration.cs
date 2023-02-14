@@ -3,9 +3,9 @@ using Catalog.Host.Data.Entities;
 namespace Catalog.Host.Data.EntityConfigurations;
 
 public class CatalogItemEntityTypeConfiguration
-    : IEntityTypeConfiguration<CatalogItem>
+    : IEntityTypeConfiguration<CatalogCharacterItem>
 {
-    public void Configure(EntityTypeBuilder<CatalogItem> builder)
+    public void Configure(EntityTypeBuilder<CatalogCharacterItem> builder)
     {
         builder.ToTable("Catalog");
 
@@ -17,18 +17,22 @@ public class CatalogItemEntityTypeConfiguration
             .IsRequired(true)
             .HasMaxLength(50);
 
-        builder.Property(ci => ci.Price)
+        builder.Property(ci => ci.Region)
+               .IsRequired(true)
+               .HasMaxLength(50);
+
+        builder.Property(ci => ci.Birthday)
             .IsRequired(true);
 
         builder.Property(ci => ci.PictureFileName)
             .IsRequired(false);
 
-        builder.HasOne(ci => ci.CatalogBrand)
+        builder.HasOne(ci => ci.CatalogWeapon)
             .WithMany()
-            .HasForeignKey(ci => ci.CatalogBrandId);
+            .HasForeignKey(ci => ci.CatalogWeaponId);
 
-        builder.HasOne(ci => ci.CatalogType)
+        builder.HasOne(ci => ci.CatalogRarity)
             .WithMany()
-            .HasForeignKey(ci => ci.CatalogTypeId);
+            .HasForeignKey(ci => ci.CatalogRarityId);
     }
 }

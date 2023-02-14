@@ -27,7 +27,7 @@ public class CatalogItemController : ControllerBase
     [ProducesResponseType(typeof(AddItemResponse<int?>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> Add(CreateProductRequest request)
     {
-        var result = await _catalogItemService.AddAsync(request.Name, request.Description, request.Price, request.AvailableStock, request.CatalogBrandId, request.CatalogTypeId, request.PictureFileName);
+        var result = await _catalogItemService.AddAsync(request.Name, request.Region, request.Birthday, request.CatalogRarityId, request.CatalogWeaponId, request.PictureUrl);
         return Ok(new AddItemResponse<int?>() { Id = result });
     }
 }

@@ -27,23 +27,23 @@ public class CatalogService : BaseDataService<ApplicationDbContext>, ICatalogSer
     {
         return await ExecuteSafeAsync(async () =>
         {
-            int? brandFilter = null;
-            int? typeFilter = null;
+            int? weaponFilter = null;
+            int? rarityFilter = null;
 
             if (filters != null)
             {
-                if (filters.TryGetValue(CatalogTypeFilter.Brand, out var brand))
+                if (filters.TryGetValue(CatalogTypeFilter.Weapon, out var weapon))
                 {
-                    brandFilter = brand;
+                    weaponFilter = weapon;
                 }
 
-                if (filters.TryGetValue(CatalogTypeFilter.Type, out var type))
+                if (filters.TryGetValue(CatalogTypeFilter.Rarity, out var rarity))
                 {
-                    typeFilter = type;
+                    rarityFilter = rarity;
                 }
             }
 
-            var result = await _catalogItemRepository.GetByPageAsync(pageIndex, pageSize, brandFilter, typeFilter);
+            var result = await _catalogItemRepository.GetByPageAsync(pageIndex, pageSize, weaponFilter, rarityFilter);
             if (result == null)
             {
                 return null;

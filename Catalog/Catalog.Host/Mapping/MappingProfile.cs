@@ -7,10 +7,10 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<CatalogItem, CatalogItemDto>()
+        CreateMap<CatalogCharacterItem, CatalogItemDto>()
             .ForMember("PictureUrl", opt
                 => opt.MapFrom<CatalogItemPictureResolver, string>(c => c.PictureFileName));
-        CreateMap<CatalogBrand, CatalogBrandDto>();
-        CreateMap<CatalogType, CatalogTypeDto>();
+        CreateMap<CatalogWeapon, CatalogRarityDto>();
+        CreateMap<CatalogRarity, CatalogWeaponDto>();
     }
 }

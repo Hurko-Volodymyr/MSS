@@ -1,18 +1,20 @@
+using Catalog.Host.Models.Dtos;
+
 namespace Catalog.Host.Models.Requests;
 
 public class CreateProductRequest
 {
+    public int Id { get; set; }
+
     public string Name { get; set; } = null!;
 
-    public string Description { get; set; } = null!;
+    public string Region { get; set; } = null!;
 
-    public decimal Price { get; set; }
+    public string Birthday { get; set; } = null!;
 
-    public string PictureFileName { get; set; } = null!;
+    public string PictureUrl { get; set; } = null!;
 
-    public int CatalogTypeId { get; set; }
+    public int CatalogWeaponId { get; set; }
 
-    public int CatalogBrandId { get; set; }
-
-    public int AvailableStock { get; set; }
+    public int CatalogRarityId { get; set; }
 }

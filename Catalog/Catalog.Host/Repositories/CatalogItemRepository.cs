@@ -17,42 +17,42 @@ public class CatalogItemRepository : ICatalogItemRepository
         _logger = logger;
     }
 
-    public async Task<PaginatedItems<CatalogItem>> GetByPageAsync(int pageIndex, int pageSize, int? brandFilter, int? typeFilter)
+    public async Task<PaginatedItems<CatalogCharacterItem>> GetByPageAsync(int pageIndex, int pageSize, int? brandFilter, int? typeFilter)
     {
-        IQueryable<CatalogItem> query = _dbContext.CatalogItems;
+        IQueryable<CatalogCharacterItem> query = _dbContext.CatalogItems;
 
         if (brandFilter.HasValue)
         {
-            query = query.Where(w => w.CatalogBrandId == brandFilter.Value);
+            query = query.Where(w => w.CatalogWeaponId == brandFilter.Value);
         }
 
         if (typeFilter.HasValue)
         {
-            query = query.Where(w => w.CatalogTypeId == typeFilter.Value);
+            query = query.Where(w => w.CatalogRarityId == typeFilter.Value);
         }
 
         var totalItems = await query.LongCountAsync();
 
         var itemsOnPage = await query.OrderBy(c => c.Name)
-           .Include(i => i.CatalogBrand)
-           .Include(i => i.CatalogType)
+           .Include(i => i.CatalogWeapon)
+           .Include(i => i.CatalogRarity)
            .Skip(pageSize * pageIndex)
            .Take(pageSize)
            .ToListAsync();
 
-        return new PaginatedItems<CatalogItem>() { TotalCount = totalItems, Data = itemsOnPage };
+        return new PaginatedItems<CatalogCharacterItem>() { TotalCount = totalItems, Data = itemsOnPage };
     }
 
-    public async Task<int?> Add(string name, string description, decimal price, int availableStock, int catalogBrandId, int catalogTypeId, string pictureFileName)
+    public async Task<int?> Add(string name, string region, string birthday, int catalogWeaponId, int catalogRarityId, string pictureFileName)
     {
-        var item1 = new CatalogItem
+        var item1 = new CatalogCharacterItem
         {
-            CatalogBrandId = catalogBrandId,
-            CatalogTypeId = catalogTypeId,
-            Description = description,
+            CatalogWeaponId = catalogWeaponId,
+            CatalogRarityId = catalogRarityId,
+            Region = region,
             Name = name,
             PictureFileName = pictureFileName,
-            Price = price
+            Birthday = birthday
         };
         var item = await _dbContext.AddAsync(item1);
 

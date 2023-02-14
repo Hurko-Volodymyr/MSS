@@ -17,8 +17,8 @@ public class CatalogItemService : BaseDataService<ApplicationDbContext>, ICatalo
         _catalogItemRepository = catalogItemRepository;
     }
 
-    public Task<int?> AddAsync(string name, string description, decimal price, int availableStock, int catalogBrandId, int catalogTypeId, string pictureFileName)
+    public Task<int?> AddAsync(string name, string region, string birthday, int catalogWeaponId, int catalogRarityId, string pictureFileName)
     {
-        return ExecuteSafeAsync(() => _catalogItemRepository.Add(name, description, price, availableStock, catalogBrandId, catalogTypeId, pictureFileName));
+        return ExecuteSafeAsync(() => _catalogItemRepository.Add(name, region, birthday, catalogWeaponId, catalogRarityId, pictureFileName));
     }
 }
