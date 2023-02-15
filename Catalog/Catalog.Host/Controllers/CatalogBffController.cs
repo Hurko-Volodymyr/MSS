@@ -1,7 +1,7 @@
 using Catalog.Host.Configurations;
 using Catalog.Host.Models.Dtos;
 using Catalog.Host.Models.Enums;
-using Catalog.Host.Models.Requests;
+using Catalog.Host.Models.Requests.Items;
 using Catalog.Host.Models.Response;
 using Catalog.Host.Services.Interfaces;
 using Infrastructure.Identity;
@@ -38,10 +38,42 @@ public class CatalogBffController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
-    public IActionResult GetBrands()
+    [ProducesResponseType(typeof(PaginatedItemsResponse<CatalogItemDto>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> ItemsByRarity(ItemsByRarityRequest request)
     {
-        _logger.LogInformation($"User Id {User.Claims.FirstOrDefault(x => x.Type == "sub")?.Value}");
-        return Ok();
+        var result = await _catalogService.GetCatalogItemsByRarityAsync(request.Rarity);
+        return Ok(result);
+    }
+
+    [HttpPost]
+    [ProducesResponseType(typeof(PaginatedItemsResponse<CatalogItemDto>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> ItemsByRarity(ItemsByWeaponRequest request)
+    {
+        var result = await _catalogService.GetCatalogItemsByWeaponAsync(request.Weapon);
+        return Ok(result);
+    }
+
+    [HttpPost("{id}")]
+    [ProducesResponseType(typeof(CatalogItemDto), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> ItemById(int id)
+    {
+        var result = await _catalogService.GetCatalogItemByIdAsync(id);
+        return Ok(result);
+    }
+
+    [HttpPost]
+    [ProducesResponseType(typeof(PaginatedItemsResponse<CatalogRarityDto>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> Rarities()
+    {
+        var result = await _catalogRarityService.GetCatalogRaritiesAsync();
+        return Ok(result);
+    }
+
+    [HttpPost]
+    [ProducesResponseType(typeof(PaginatedItemsResponse<CatalogWeaponDto>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> Weapons()
+    {
+        var result = await _catalogWeaponService.GetCatalogWeponsAsync();
+        return Ok(result);
     }
 }

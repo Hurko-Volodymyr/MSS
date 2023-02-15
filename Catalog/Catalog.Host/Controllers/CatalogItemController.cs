@@ -1,4 +1,4 @@
-using Catalog.Host.Models.Requests;
+using Catalog.Host.Models.Requests.Items;
 using Catalog.Host.Models.Response;
 using Catalog.Host.Services.Interfaces;
 using Infrastructure.Identity;
@@ -25,7 +25,7 @@ public class CatalogItemController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(typeof(AddItemResponse<int?>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Add(CreateProductRequest request)
+    public async Task<IActionResult> Add(CreateCharacterRequest request)
     {
         var result = await _catalogItemService.AddAsync(request.Name, request.Region, request.Birthday, request.CatalogRarityId, request.CatalogWeaponId, request.PictureUrl);
         return Ok(new AddItemResponse<int?>() { Id = result });

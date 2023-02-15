@@ -11,16 +11,34 @@ public class CatalogService : BaseDataService<ApplicationDbContext>, ICatalogSer
 {
     private readonly ICatalogItemRepository _catalogItemRepository;
     private readonly IMapper _mapper;
+    private readonly ILogger<CatalogService> _logger;
 
     public CatalogService(
         IDbContextWrapper<ApplicationDbContext> dbContextWrapper,
-        ILogger<BaseDataService<ApplicationDbContext>> logger,
+        ILogger<CatalogService> logger,
         ICatalogItemRepository catalogItemRepository,
         IMapper mapper)
         : base(dbContextWrapper, logger)
     {
         _catalogItemRepository = catalogItemRepository;
         _mapper = mapper;
+        _logger = logger;
+    }
+
+    public async Task<CatalogItemDto?> GetCatalogItemByIdAsync(int id)
+    {
+        return await ExecuteSafeAsync(async () =>
+        {
+            var result = await _catalogItemRepository.GetByIdAsync(id);
+
+            if (result == null)
+            {
+                _logger.LogWarning($"Character with Id = {id} not found");
+                return null;
+            }
+
+            return _mapper.Map<CatalogItemDto>(result);
+        });
     }
 
     public async Task<PaginatedItemsResponse<CatalogItemDto>?> GetCatalogItemsAsync(int pageSize, int pageIndex, Dictionary<CatalogTypeFilter, int>? filters)
@@ -55,6 +73,44 @@ public class CatalogService : BaseDataService<ApplicationDbContext>, ICatalogSer
                 Data = result.Data.Select(s => _mapper.Map<CatalogItemDto>(s)).ToList(),
                 PageIndex = pageIndex,
                 PageSize = pageSize
+            };
+        });
+    }
+
+    public async Task<PaginatedItemsResponse<CatalogItemDto>?> GetCatalogItemsByRarityAsync(string rarity)
+    {
+        return await ExecuteSafeAsync(async () =>
+        {
+            var result = await _catalogItemRepository.GetByRarityAsync(rarity);
+
+            if (result == null)
+            {
+                _logger.LogWarning($"Characters with Rarity = {rarity} not found");
+                return null;
+            }
+
+            return new PaginatedItemsResponse<CatalogItemDto>()
+            {
+                Data = result.Data.Select(s => _mapper.Map<CatalogItemDto>(s)).ToList()
+            };
+        });
+    }
+
+    public async Task<PaginatedItemsResponse<CatalogItemDto>?> GetCatalogItemsByWeaponAsync(string weapon)
+    {
+        return await ExecuteSafeAsync(async () =>
+        {
+            var result = await _catalogItemRepository.GetByWeaponAsync(weapon);
+
+            if (result == null)
+            {
+                _logger.LogWarning($"Characters with weapon = {weapon} not found");
+                return null;
+            }
+
+            return new PaginatedItemsResponse<CatalogItemDto>()
+            {
+                Data = result.Data.Select(s => _mapper.Map<CatalogItemDto>(s)).ToList()
             };
         });
     }

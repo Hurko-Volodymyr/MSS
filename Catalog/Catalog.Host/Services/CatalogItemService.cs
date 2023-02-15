@@ -21,4 +21,17 @@ public class CatalogItemService : BaseDataService<ApplicationDbContext>, ICatalo
     {
         return ExecuteSafeAsync(() => _catalogItemRepository.Add(name, region, birthday, catalogWeaponId, catalogRarityId, pictureFileName));
     }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        return await ExecuteSafeAsync(async () => await _catalogItemRepository.DeleteAsync(id));
+    }
+
+    public async Task<bool> UpdateAsync(int id, string name, string region, string birthday, int catalogRarityId, int catalogWeaponId, string pictureFile)
+    {
+        return await ExecuteSafeAsync(async () =>
+        {
+            return await _catalogItemRepository.UpdateAsync(id, name, region, birthday, catalogRarityId, catalogWeaponId, pictureFile);
+        });
+    }
 }

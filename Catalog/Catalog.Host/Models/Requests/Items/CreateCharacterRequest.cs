@@ -1,11 +1,12 @@
-using Catalog.Host.Models.Dtos;
+using System.ComponentModel.DataAnnotations;
 
-namespace Catalog.Host.Models.Requests;
+namespace Catalog.Host.Models.Requests.Items;
 
-public class CreateProductRequest
+public class CreateCharacterRequest
 {
     public int Id { get; set; }
 
+    [Required]
     public string Name { get; set; } = null!;
 
     public string Region { get; set; } = null!;

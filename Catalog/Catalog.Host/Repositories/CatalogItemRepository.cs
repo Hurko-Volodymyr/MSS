@@ -43,7 +43,7 @@ public class CatalogItemRepository : ICatalogItemRepository
         return new PaginatedItems<CatalogCharacterItem>() { TotalCount = totalItems, Data = itemsOnPage };
     }
 
-    public async Task<int?> Add(string name, string region, string birthday, int catalogWeaponId, int catalogRarityId, string pictureFileName)
+    public async Task<int?> Add(string name, string region, string birthday, int catalogWeaponId, int catalogRarityId, string pictureFile)
     {
         var item1 = new CatalogCharacterItem
         {
@@ -51,7 +51,7 @@ public class CatalogItemRepository : ICatalogItemRepository
             CatalogRarityId = catalogRarityId,
             Region = region,
             Name = name,
-            PictureFileURL = pictureFileName,
+            PictureFileURL = pictureFile,
             Birthday = birthday
         };
         var item = await _dbContext.AddAsync(item1);
@@ -59,5 +59,64 @@ public class CatalogItemRepository : ICatalogItemRepository
         await _dbContext.SaveChangesAsync();
 
         return item.Entity.Id;
+    }
+
+    public async Task<PaginatedItems<CatalogCharacterItem>> GetByRarityAsync(string rarity)
+    {
+        var result = await _dbContext.CatalogItems
+                  .Include(i => i.CatalogRarity).Where(w => w.CatalogRarity!.Rarity == rarity)
+                  .ToListAsync();
+
+        return new PaginatedItems<CatalogCharacterItem>() { Data = result };
+    }
+
+    public async Task<PaginatedItems<CatalogCharacterItem>> GetByWeaponAsync(string weapon)
+    {
+        var result = await _dbContext.CatalogItems
+                    .Include(i => i.CatalogWeapon).Where(w => w.CatalogWeapon!.Weapon == weapon)
+                    .ToListAsync();
+
+        return new PaginatedItems<CatalogCharacterItem>() { Data = result };
+    }
+
+    public async Task<CatalogCharacterItem?> GetByIdAsync(int id)
+    {
+        return await _dbContext.CatalogItems.Include(i => i.CatalogWeapon).Include(i => i.CatalogRarity).FirstOrDefaultAsync(f => f.Id == id);
+    }
+
+    public async Task<bool> UpdateAsync(int id, string name, string region, string birthday, int catalogRarityId, int catalogWeaponId, string pictureFile)
+    {
+        var item = await _dbContext.CatalogItems.FirstOrDefaultAsync(f => f.Id == id);
+
+        if (item == null)
+        {
+            return false;
+        }
+
+        item!.Name = name;
+        item!.Region = region;
+        item!.Birthday = birthday;
+        item!.CatalogRarityId = catalogRarityId;
+        item!.CatalogWeaponId = catalogWeaponId;
+        item!.PictureFileURL = pictureFile;
+
+        _dbContext.Entry(item).CurrentValues.SetValues(item);
+        await _dbContext.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var item = await _dbContext.CatalogItems.FirstOrDefaultAsync(f => f.Id == id);
+        if (item == null)
+        {
+            return false;
+        }
+
+        _dbContext.Entry(item).State = EntityState.Deleted;
+        await _dbContext.SaveChangesAsync();
+
+        return true;
     }
 }
