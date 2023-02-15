@@ -1,7 +1,7 @@
 using Catalog.Host.Data;
 using Catalog.Host.Models.Dtos;
 using Catalog.Host.Models.Enums;
-using Catalog.Host.Models.Response;
+using Catalog.Host.Models.Response.Items;
 using Catalog.Host.Repositories.Interfaces;
 using Catalog.Host.Services.Interfaces;
 

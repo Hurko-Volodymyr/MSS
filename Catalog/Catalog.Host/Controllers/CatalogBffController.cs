@@ -2,7 +2,7 @@ using Catalog.Host.Configurations;
 using Catalog.Host.Models.Dtos;
 using Catalog.Host.Models.Enums;
 using Catalog.Host.Models.Requests.Items;
-using Catalog.Host.Models.Response;
+using Catalog.Host.Models.Response.Items;
 using Catalog.Host.Services;
 using Catalog.Host.Services.Interfaces;
 using Infrastructure.Identity;
@@ -54,7 +54,7 @@ public class CatalogBffController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType(typeof(PaginatedItemsResponse<CatalogItemDto>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> ItemsByRarity(ItemsByWeaponRequest request)
+    public async Task<IActionResult> ItemsByWeapon(ItemsByWeaponRequest request)
     {
         var result = await _catalogService.GetCatalogItemsByWeaponAsync(request.Weapon);
         return Ok(result);
