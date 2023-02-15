@@ -2,6 +2,8 @@ using System.Threading;
 using Catalog.Host.Data.Entities;
 using Catalog.Host.Models.Dtos;
 using Catalog.Host.Models.Response;
+using Catalog.Host.Models.Response.Items;
+using Moq;
 
 namespace Catalog.UnitTests.Services;
 
@@ -10,6 +12,8 @@ public class CatalogServiceTest
     private readonly ICatalogService _catalogService;
 
     private readonly Mock<ICatalogItemRepository> _catalogItemRepository;
+    private readonly Mock<ICatalogRarityRepository> _catalogRarityRepository;
+    private readonly Mock<ICatalogWeaponRepository> _catalogWeaponRepository;
     private readonly Mock<IMapper> _mapper;
     private readonly Mock<IDbContextWrapper<ApplicationDbContext>> _dbContextWrapper;
     private readonly Mock<ILogger<CatalogService>> _logger;
@@ -17,6 +21,8 @@ public class CatalogServiceTest
     public CatalogServiceTest()
     {
         _catalogItemRepository = new Mock<ICatalogItemRepository>();
+        _catalogRarityRepository = new Mock<ICatalogRarityRepository>();
+        _catalogWeaponRepository = new Mock<ICatalogWeaponRepository>();
         _mapper = new Mock<IMapper>();
         _dbContextWrapper = new Mock<IDbContextWrapper<ApplicationDbContext>>();
         _logger = new Mock<ILogger<CatalogService>>();
@@ -96,5 +102,220 @@ public class CatalogServiceTest
 
         // assert
         result.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetCatalogItemByIdAsync_Success()
+    {
+        // arrange
+        var testId = 1;
+        var characterSuccess = new CatalogCharacterItem()
+        {
+            Name = "TestName"
+        };
+        var characterDtoSuccess = new CatalogItemDto()
+        {
+            Name = "TestName"
+        };
+
+        _catalogItemRepository.Setup(s => s.GetByIdAsync(It.Is<int>(i => i == testId))).ReturnsAsync(characterSuccess);
+        _mapper.Setup(s => s.Map<CatalogItemDto>(It.Is<CatalogCharacterItem>(i => i.Equals(characterSuccess)))).Returns(characterDtoSuccess);
+
+        // act
+        var result = await _catalogService.GetCatalogItemByIdAsync(testId);
+
+        // assert
+        result.Should().NotBeNull();
+        result?.Name.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task GetCatalogItemByIdAsync_Failed()
+    {
+        // arrange
+        int testId = default;
+        _catalogItemRepository.Setup(s => s.GetByIdAsync(It.Is<int>(i => i.Equals(testId)))).Returns((Func<CatalogItemDto>)null!);
+
+        // act
+        var result = await _catalogService.GetCatalogItemByIdAsync(testId);
+
+        // assert
+        result.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetCatalogItemsByWeaponAsync_Success()
+    {
+        // arrange
+        var weapon = "Weapon";
+
+        var pagingPaginatedItemsSuccess = new PaginatedItems<CatalogCharacterItem>()
+        {
+            Data = new List<CatalogCharacterItem>()
+            {
+                new CatalogCharacterItem()
+                {
+                    CatalogWeapon = new CatalogWeapon()
+                    {
+                        Weapon = weapon
+                    }
+                },
+            },
+        };
+
+        var catalogItemSuccess = new CatalogCharacterItem()
+        {
+            CatalogWeapon = new CatalogWeapon()
+            {
+                Weapon = weapon
+            }
+        };
+
+        var catalogItemDtoSuccess = new CatalogItemDto()
+        {
+            CatalogWeapon = new CatalogWeaponDto()
+            {
+                Weapon = weapon
+            }
+        };
+
+        _catalogItemRepository.Setup(s => s.GetByWeaponAsync(
+            It.IsAny<string>())).ReturnsAsync(pagingPaginatedItemsSuccess);
+
+        _mapper.Setup(s => s.Map<CatalogItemDto>(
+            It.Is<CatalogCharacterItem>(i => i.Equals(catalogItemSuccess)))).Returns(catalogItemDtoSuccess);
+
+        // act
+        var result = await _catalogService.GetCatalogItemsByWeaponAsync(weapon);
+
+        // assert
+        result.Should().NotBeNull();
+        result?.Data.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task GetCatalogItemsByWeaponAsync_Failed()
+    {
+        // arrange
+        var weapon = "Weapon";
+
+        PaginatedItems<CatalogCharacterItem> pagingPaginatedItems = default!;
+
+        var catalogItemSuccess = new CatalogCharacterItem()
+        {
+            CatalogWeapon = new CatalogWeapon()
+            {
+                Weapon = weapon
+            }
+        };
+
+        var catalogItemDtoSuccess = new CatalogItemDto()
+        {
+            CatalogWeapon = new CatalogWeaponDto()
+            {
+                Weapon = weapon
+            }
+        };
+
+        _catalogItemRepository.Setup(s => s.GetByWeaponAsync(
+            It.IsAny<string>())).ReturnsAsync(pagingPaginatedItems);
+
+        _mapper.Setup(s => s.Map<CatalogItemDto>(
+            It.Is<CatalogCharacterItem>(i => i.Equals(catalogItemSuccess)))).Returns(catalogItemDtoSuccess);
+
+        // act
+        var result = await _catalogService.GetCatalogItemsByWeaponAsync(weapon);
+
+        // assert
+        result.Should().BeNull();
+        result?.Data.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetCatalogItemsByRarityAsync_Success()
+    {
+        // arrange
+        var rarity = "Rarity";
+
+        var pagingPaginatedItemsSuccess = new PaginatedItems<CatalogCharacterItem>()
+        {
+            Data = new List<CatalogCharacterItem>()
+            {
+                new CatalogCharacterItem()
+                {
+                    CatalogRarity = new CatalogRarity()
+                    {
+                        Rarity = rarity
+                    }
+                },
+            },
+        };
+
+        var catalogItemSuccess = new CatalogCharacterItem()
+        {
+            CatalogRarity = new CatalogRarity()
+            {
+                Rarity = rarity
+            }
+        };
+
+        var catalogItemDtoSuccess = new CatalogItemDto()
+        {
+            CatalogRarity = new CatalogRarityDto()
+            {
+                Rarity = rarity
+            }
+        };
+
+        _catalogItemRepository.Setup(s => s.GetByRarityAsync(
+            It.IsAny<string>())).ReturnsAsync(pagingPaginatedItemsSuccess);
+
+        _mapper.Setup(s => s.Map<CatalogItemDto>(
+            It.Is<CatalogCharacterItem>(i => i.Equals(catalogItemSuccess)))).Returns(catalogItemDtoSuccess);
+
+        // act
+        var result = await _catalogService.GetCatalogItemsByRarityAsync(rarity);
+
+        // assert
+        result.Should().NotBeNull();
+        result?.Data.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task GetCatalogItemsByRarityAsync_Failed()
+    {
+        // arrange
+        var rarity = "Rarity";
+
+        PaginatedItems<CatalogCharacterItem> pagingPaginatedItems = default!;
+
+        var catalogItemSuccess = new CatalogCharacterItem()
+        {
+            CatalogRarity = new CatalogRarity()
+            {
+                Rarity = rarity
+            }
+        };
+
+        var catalogItemDtoSuccess = new CatalogItemDto()
+        {
+            CatalogRarity = new CatalogRarityDto()
+            {
+                Rarity = rarity
+            }
+        };
+
+        _catalogItemRepository.Setup(s => s.GetByRarityAsync(
+            It.IsAny<string>())).ReturnsAsync(pagingPaginatedItems);
+
+        _mapper.Setup(s => s.Map<CatalogItemDto>(
+            It.Is<CatalogCharacterItem>(i => i.Equals(catalogItemSuccess)))).Returns(catalogItemDtoSuccess);
+
+        // act
+        var result = await _catalogService.GetCatalogItemsByRarityAsync(rarity);
+
+        // assert
+        result.Should().BeNull();
+        result?.Data.Should().BeNull();
     }
 }

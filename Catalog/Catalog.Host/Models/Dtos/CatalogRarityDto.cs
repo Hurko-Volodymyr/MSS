@@ -4,5 +4,5 @@ public class CatalogRarityDto
 {
     public int Id { get; set; }
 
-    public string Brand { get; set; } = null!;
+    public string Rarity { get; set; } = null!;
 }

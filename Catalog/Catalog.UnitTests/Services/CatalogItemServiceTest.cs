@@ -14,7 +14,8 @@ public class CatalogItemServiceTest
     private readonly CatalogCharacterItem _testItem = new CatalogCharacterItem()
     {
         Name = "Name",
-        Region = "Description",
+        Region = "Region",
+        Birthday = "Birthday",
         CatalogWeaponId = 1,
         CatalogRarityId = 1,
         PictureFileURL = "1.png"
@@ -32,47 +33,123 @@ public class CatalogItemServiceTest
         _catalogService = new CatalogItemService(_dbContextWrapper.Object, _logger.Object, _catalogItemRepository.Object);
     }
 
-    // [Fact]
-    // public async Task AddAsync_Success()
-    // {
-    //    // arrange
-    //    var testResult = 1;
+    [Fact]
+    public async Task AddAsync_Success()
+    {
+        // arrange
+        var testResult = 1;
 
-    // _catalogItemRepository.Setup(s => s.Add(
-    //        It.IsAny<string>(),
-    //        It.IsAny<string>(),
-    //        It.IsAny<decimal>(),
-    //        It.IsAny<int>(),
-    //        It.IsAny<int>(),
-    //        It.IsAny<int>(),
-    //        It.IsAny<string>())).ReturnsAsync(testResult);
+        _catalogItemRepository.Setup(s => s.Add(
+               It.IsAny<string>(),
+               It.IsAny<string>(),
+               It.IsAny<string>(),
+               It.IsAny<int>(),
+               It.IsAny<int>(),
+               It.IsAny<string>())).ReturnsAsync(testResult);
 
-    // // act
-    //    var result = await _catalogService.AddAsync(_testItem.Name, _testItem.Region, _testItem.CatalogWeaponId, _testItem.CatalogRarityId, _testItem.PictureFileName);
+        // act
+        var result = await _catalogService.AddAsync(_testItem.Name, _testItem.Region, _testItem.Birthday, _testItem.CatalogWeaponId, _testItem.CatalogRarityId, _testItem.PictureFileURL);
 
-    // // assert
-    //    result.Should().Be(testResult);
-    // }
+        // assert
+        result.Should().Be(testResult);
+    }
 
-    // [Fact]
-    // public async Task AddAsync_Failed()
-    // {
-    //    // arrange
-    //    int? testResult = null;
+    [Fact]
+    public async Task AddAsync_Failed()
+    {
+        // arrange
+        int testResult = default;
 
-    // _catalogItemRepository.Setup(s => s.Add(
-    //        It.IsAny<string>(),
-    //        It.IsAny<string>(),
-    //        It.IsAny<decimal>(),
-    //        It.IsAny<int>(),
-    //        It.IsAny<int>(),
-    //        It.IsAny<int>(),
-    //        It.IsAny<string>())).ReturnsAsync(testResult);
+        _catalogItemRepository.Setup(s => s.Add(
+               It.IsAny<string>(),
+               It.IsAny<string>(),
+               It.IsAny<string>(),
+               It.IsAny<int>(),
+               It.IsAny<int>(),
+               It.IsAny<string>())).ReturnsAsync(testResult);
 
-    // // act
-    //    var result = await _catalogService.AddAsync(_testItem.Name, _testItem.Region, _testItem.Price, _testItem.AvailableStock, _testItem.CatalogWeaponId, _testItem.CatalogRarityId, _testItem.PictureFileName);
+        // act
+        var result = await _catalogService.AddAsync(_testItem.Name, _testItem.Region, _testItem.Birthday, _testItem.CatalogWeaponId, _testItem.CatalogRarityId, _testItem.PictureFileURL);
 
-    // // assert
-    //    result.Should().Be(testResult);
-    // }
+        // assert
+        result.Should().Be(testResult);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_Success()
+    {
+        // arrange
+        var testId = 1;
+        var testStringProperty = "testProperty";
+        var testNumberProperty = 1;
+        var testStatus = true;
+        _catalogItemRepository.Setup(s => s.UpdateAsync(
+            It.Is<int>(i => i.Equals(testId)),
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<int>(),
+            It.IsAny<int>(),
+            It.IsAny<string>())).ReturnsAsync(testStatus);
+
+        // act
+        var result = await _catalogService.UpdateAsync(testId, testStringProperty, testStringProperty, testStringProperty, testNumberProperty, testNumberProperty, testStringProperty);
+
+        // assert
+        result.Should().Be(testStatus);
+    }
+
+    [Fact]
+    public async Task UpdateAsync_Failed()
+    {
+        // arrange
+        var testId = 23598723;
+        var testStringProperty = "testProperty";
+        var testNumberProperty = 1;
+        var testStatus = false;
+        _catalogItemRepository.Setup(s => s.UpdateAsync(
+            It.Is<int>(i => i.Equals(testId)),
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<string>(),
+            It.IsAny<int>(),
+            It.IsAny<int>(),
+            It.IsAny<string>())).ReturnsAsync(testStatus);
+
+        // act
+        var result = await _catalogService.UpdateAsync(testId, testStringProperty, testStringProperty, testStringProperty, testNumberProperty, testNumberProperty, testStringProperty);
+
+        // assert
+        result.Should().Be(testStatus);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_Success()
+    {
+        // arrange
+        var testId = 1;
+        var testStatus = true;
+        _catalogItemRepository.Setup(s => s.DeleteAsync(It.Is<int>(i => i == testId))).ReturnsAsync(testStatus);
+
+        // act
+        var result = await _catalogService.DeleteAsync(testId);
+
+        // assert
+        result.Should().Be(testStatus);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_Failed()
+    {
+        // arrange
+        var testId = 3331;
+        var testStatus = false;
+        _catalogItemRepository.Setup(s => s.DeleteAsync(It.Is<int>(i => i == testId))).ReturnsAsync(testStatus);
+
+        // act
+        var result = await _catalogService.DeleteAsync(testId);
+
+        // assert
+        result.Should().Be(testStatus);
+    }
 }
