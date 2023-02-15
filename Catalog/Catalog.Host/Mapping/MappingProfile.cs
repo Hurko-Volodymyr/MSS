@@ -9,7 +9,7 @@ public class MappingProfile : Profile
     {
         CreateMap<CatalogCharacterItem, CatalogItemDto>()
             .ForMember("PictureUrl", opt
-                => opt.MapFrom<CatalogItemPictureResolver, string>(c => c.PictureFileName));
+                => opt.MapFrom<CatalogItemPictureResolver, string>(c => c.PictureFileURL));
         CreateMap<CatalogWeapon, CatalogRarityDto>();
         CreateMap<CatalogRarity, CatalogWeaponDto>();
     }

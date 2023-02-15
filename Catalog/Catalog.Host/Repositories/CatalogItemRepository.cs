@@ -51,7 +51,7 @@ public class CatalogItemRepository : ICatalogItemRepository
             CatalogRarityId = catalogRarityId,
             Region = region,
             Name = name,
-            PictureFileName = pictureFileName,
+            PictureFileURL = pictureFileName,
             Birthday = birthday
         };
         var item = await _dbContext.AddAsync(item1);

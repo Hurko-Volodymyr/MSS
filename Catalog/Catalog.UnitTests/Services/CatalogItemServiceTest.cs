@@ -17,7 +17,7 @@ public class CatalogItemServiceTest
         Region = "Description",
         CatalogWeaponId = 1,
         CatalogRarityId = 1,
-        PictureFileName = "1.png"
+        PictureFileURL = "1.png"
     };
 
     public CatalogItemServiceTest()

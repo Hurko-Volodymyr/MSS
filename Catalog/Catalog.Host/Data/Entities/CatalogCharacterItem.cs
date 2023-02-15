@@ -10,7 +10,7 @@ public class CatalogCharacterItem
 
     public string Birthday { get; set; } = string.Empty!;
 
-    public string PictureFileName { get; set; } = null!;
+    public string PictureFileURL { get; set; } = null!;
 
     public int CatalogRarityId { get; set; }
 
