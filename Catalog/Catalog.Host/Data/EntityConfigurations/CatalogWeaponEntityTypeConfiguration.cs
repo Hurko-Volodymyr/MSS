@@ -2,12 +2,12 @@ using Catalog.Host.Data.Entities;
 
 namespace Catalog.Host.Data.EntityConfigurations;
 
-public class CatalogBrandEntityTypeConfiguration
-    : IEntityTypeConfiguration<CatalogBrand>
+public class CatalogWeaponEntityTypeConfiguration
+    : IEntityTypeConfiguration<CatalogWeapon>
 {
-    public void Configure(EntityTypeBuilder<CatalogBrand> builder)
+    public void Configure(EntityTypeBuilder<CatalogWeapon> builder)
     {
-        builder.ToTable("CatalogBrand");
+        builder.ToTable("CatalogWeapon");
 
         builder.HasKey(ci => ci.Id);
 
@@ -15,7 +15,7 @@ public class CatalogBrandEntityTypeConfiguration
             .UseHiLo("catalog_brand_hilo")
             .IsRequired();
 
-        builder.Property(cb => cb.Brand)
+        builder.Property(cb => cb.Weapon)
             .IsRequired()
             .HasMaxLength(100);
     }

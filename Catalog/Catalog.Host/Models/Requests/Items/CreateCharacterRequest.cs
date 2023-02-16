@@ -1,9 +1,12 @@
-namespace Catalog.Host.Models.Dtos;
+using System.ComponentModel.DataAnnotations;
 
-public class CatalogItemDto
+namespace Catalog.Host.Models.Requests.Items;
+
+public class CreateCharacterRequest
 {
     public int Id { get; set; }
 
+    [Required]
     public string Name { get; set; } = null!;
 
     public string Region { get; set; } = null!;
@@ -12,7 +15,7 @@ public class CatalogItemDto
 
     public string PictureUrl { get; set; } = null!;
 
-    public CatalogWeaponDto CatalogWeapon { get; set; } = null!;
+    public int CatalogWeaponId { get; set; }
 
-    public CatalogRarityDto CatalogRarity { get; set; } = null!;
+    public int CatalogRarityId { get; set; }
 }

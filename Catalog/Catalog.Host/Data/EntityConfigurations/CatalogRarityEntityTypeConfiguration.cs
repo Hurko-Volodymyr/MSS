@@ -2,12 +2,12 @@ using Catalog.Host.Data.Entities;
 
 namespace Catalog.Host.Data.EntityConfigurations;
 
-public class CatalogTypeEntityTypeConfiguration
-    : IEntityTypeConfiguration<CatalogType>
+public class CatalogRarityEntityTypeConfiguration
+    : IEntityTypeConfiguration<CatalogRarity>
 {
-    public void Configure(EntityTypeBuilder<CatalogType> builder)
+    public void Configure(EntityTypeBuilder<CatalogRarity> builder)
     {
-        builder.ToTable("CatalogType");
+        builder.ToTable("CatalogRarity");
 
         builder.HasKey(ci => ci.Id);
 
@@ -15,7 +15,7 @@ public class CatalogTypeEntityTypeConfiguration
             .UseHiLo("catalog_type_hilo")
             .IsRequired();
 
-        builder.Property(cb => cb.Type)
+        builder.Property(cb => cb.Rarity)
             .IsRequired()
             .HasMaxLength(100);
     }

@@ -1,4 +1,4 @@
-namespace Catalog.Host.Models.Requests;
+namespace Catalog.Host.Models.Requests.Items;
 
 public class PaginatedItemsRequest<T>
     where T : notnull
